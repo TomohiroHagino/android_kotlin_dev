@@ -1,7 +1,10 @@
 package com.example.myapplication_kyohon
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
 
 class MainActivity : AppCompatActivity() {
 
@@ -9,30 +12,42 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val button = findViewById<Button>(R.id.calculate)
 
+        button.setOnClickListener {
+            // ここに任意の処理を実装する。
+            var isValid = true
+            val priceEditText = findViewById<EditText>(R.id.price)
+            val priceText = priceEditText.text.toString()
 
-        data class User(val name : String, var point : Int = 0)
+            if (priceText.isEmpty()) {
+                // 定価が未入力だったとき
+                priceEditText.error = getString(R.string.price_error)
+                isValid = false
+            }
 
-        fun printUsers(users : List<User>) {
-            users.forEach { user ->
-                print("${user.name} : ${user.point} \n")
+            val discountEditText = findViewById<EditText>(R.id.discount)
+            val discountText = discountEditText.text.toString()
+
+            if (discountText.isEmpty()) {
+                // 割引率が未入力だったとき
+                discountEditText.error = getString(R.string.discount_error)
+                isValid = false
+            }
+
+            if (isValid) {
+                // 文字列を整数型に変換
+                val price = Integer.parseInt(priceText)
+                val discount = Integer.parseInt(discountText)
+
+                // ここで画面遷移を行う。
+                val intent = Intent(this, ResultActivity::class.java)
+                intent.putExtra("price", price)
+                intent.putExtra("discount", discount)
+                startActivity(intent)
+
             }
         }
-        val people = listOf(User("Tarou", 100), User("Hanako"), User("Jirou", 50))
-        printUsers(people)
 
-        val age = 21
-        println("You ${if (age >= 18) "can" else "can't"} vote for this election")
-        val fruits = arrayOf("apple", "orange", "grape", "peach")
-        println(fruits[0])
-
-        val list = mutableListOf<String>()
-        list.add("apple")
-        println(list)
-
-        val array = arrayOf("a","b","c")
-        for(i in 0 until array.size) {
-            print(array[i])
-        }
     }
 }
